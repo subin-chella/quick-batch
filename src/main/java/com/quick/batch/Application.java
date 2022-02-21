@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-@EnableBatchProcessing
+
 public class Application implements CommandLineRunner {
 	@Value("${spring.batch.job.enabled}")
 	private String userBucketPath;

@@ -7,8 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.explore.support.JobExplorerFactoryBean;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
@@ -21,11 +24,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.quick.batch.processor.RecordProcessor;
-import com.quick.batch.reader.NumberToDollarReader;
 import com.quick.batch.types.read.IntegerToDollarRead;
 import com.quick.batch.types.write.IntegerToDollarWrite;
 
 @Configuration
+@EnableBatchProcessing
 
 public class BatchConfiguration {
 
@@ -60,6 +63,11 @@ public class BatchConfiguration {
 	public Job importUserJob(JobBuilderFactory jobs, Step s1, JobExecutionListener listener) {
 		return jobs.get("importUserJob").incrementer(new RunIdIncrementer()).listener(listener).flow(s1).end().build();
 	}
+	
+	@Bean
+	public Job importUserJob1(JobBuilderFactory jobs, Step s1, JobExecutionListener listener) {
+		return jobs.get("importUserJob1").incrementer(new RunIdIncrementer()).listener(listener).flow(s1).end().build();
+	}
 
 	@Bean
 	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<IntegerToDollarRead> reader,
@@ -73,4 +81,11 @@ public class BatchConfiguration {
 	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 		return new JdbcTemplate(dataSource);
 	}
+	
+//	@Bean
+//	public JobExplorer getJobExplorer(DataSource dataSource) throws Exception {
+//		JobExplorerFactoryBean factoryBean = new JobExplorerFactoryBean();
+//		factoryBean.setDataSource(dataSource);
+//		return factoryBean.getObject();
+//	}
 }
